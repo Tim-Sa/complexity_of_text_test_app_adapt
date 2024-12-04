@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 
 import {
+    Button,
     Card,
     CardHeader,
     CardBody,
@@ -11,10 +12,8 @@ import {
     Text,
   } from "grommet";
 
-import CopyEmailToClipboard from "./CopyEmailToClipboard";
 
-
-const Instruction = () => {
+const Instruction = ({ startTest }) => {
     const size = useContext(ResponsiveContext);
     return (
       <Card>
@@ -27,18 +26,14 @@ const Instruction = () => {
           <Paragraph maxlines={size === "small" ? 3 : undefined}>
            <Text>
              <p>Пожалуйста, оцените сложность восприятия каждого текста по двум шкалам: </p>
-             <p>на первой шкале — от 0 до 7 (где 0 означает «очень легко» и 7 — «очень сложно»), </p>
-             <p>и на второй шкале — от 0 до 7 (где 0 означает «очень скучно» и 7 — «очень интересно»). </p>
+             <p>на первой шкале — от 1 до 8 (где 1 означает «очень легко» и 8 — «очень сложно»), </p>
+             <p>и на второй шкале — от 1 до 8 (где 1 означает «очень скучно» и 8 — «очень интересно»). </p>
              <p>После оценки всех текстов нажмите кнопку "Отправить ответы".</p>
            </Text>
           </Paragraph>
         </CardBody>
         <CardFooter pad="small" background="background-contrast">
-        <p>
-         Почта для обратной связи:<br />
-         <CopyEmailToClipboard/>
-        </p>
-
+          <Button primary label="Начать тест" onClick={startTest} />
         </CardFooter>
       </Card>
     );

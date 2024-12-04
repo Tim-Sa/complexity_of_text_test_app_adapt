@@ -15,6 +15,7 @@ import {
   import { Moon, Sun } from "grommet-icons";
 
   import Instruction from "./components/Instruction";
+  import Test from "./components/Test";
 
 const theme = deepMerge(grommet, {
   global: {
@@ -40,6 +41,12 @@ const AppBar = (props) => (
 
 function App() {
   const [dark, setDark] = useState(false);
+  const [showStartPage, setShowStartPage] = useState(true);
+
+  const startTest = () => {
+    setShowStartPage(!showStartPage);
+  };
+
   return (
    <Grommet theme={theme} full themeMode={dark ? "dark" : "light"}>
       <Page>
@@ -64,9 +71,10 @@ function App() {
           />
         </AppBar> 
         <PageContent>
-          <PageHeader title="Исследование восприятия текстов." />
+          <PageHeader title="Исследование восприятия текстов." level={3}  />
           <Grid columns="medium" gap="large" pad={{ bottom: "large"}}>
-            <Instruction />
+          {showStartPage ? <Instruction startTest={startTest} /> : <Test />}
+            
           </Grid>
         </PageContent>       
       </Page>
