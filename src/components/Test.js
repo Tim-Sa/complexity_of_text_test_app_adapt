@@ -14,31 +14,46 @@ import {
 
 import FinalPage from "./FinalPage";
 
-function Test() {
+function Test({ texts, error }) {
     const size = useContext(ResponsiveContext);
     const [diffValue, setDiffValue] = React.useState(4);
     const [intValue, setIntValue] = React.useState(4);
-    const [isFinalPage, setIsFinalPage] = useState(false); // Состояние для отслеживания отображаемого компонента
+    const [isFinalPage, setIsFinalPage] = useState(false);
+    const [currentTextIndex, setCurrentTextIndex] = useState(0);
 
     const handleNextText = () => {
-        setIsFinalPage(true); // Меняем состояние, чтобы показать FinallPage
+        if (currentTextIndex < texts.length - 1) {
+            setCurrentTextIndex(currentTextIndex + 1);
+            setDiffValue(4);
+            setIntValue(4);
+        } else {
+            setIsFinalPage(true);
+        }
     };
+
+    if (error) {
+        return <Text color="status-critical">Ошибка загрузки текстов: {error.message}</Text>;
+    }
+
+    if (!texts.length) {
+        return <Text>Загрузка текстов...</Text>;
+    }
 
     return (
         <>
-            {isFinalPage ? ( // Условный рендеринг
+            {isFinalPage ? (
                 <FinalPage />
             ) : (
                 <Card>
                     <CardHeader pad="small">
                         <Heading level={4} margin="none">
-                            Оцените текст:
+                            Оцените текст {currentTextIndex + 1} из {texts.length}:
                         </Heading>
                     </CardHeader>
                     <CardBody pad="small">
                         <Paragraph maxlines={size === "medium" ? 3 : undefined}>
                             <Text>
-                                <p>Текст на оценку</p>
+                                <p>{texts[currentTextIndex].text}</p>
                             </Text>
                         </Paragraph>
                         <p>Сложность текста:</p>
