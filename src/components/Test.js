@@ -14,23 +14,61 @@ import {
 
 import FinalPage from "./FinalPage";
 
-function Test({ texts, error }) {
+function Test({ texts, userId, error }) {
     const size = useContext(ResponsiveContext);
-    const [diffValue, setDiffValue] = React.useState(4);
-    const [intValue, setIntValue] = React.useState(4);
+    const [diffValue, setDiffValue] = useState(4);
+    const [intValue, setIntValue] = useState(4);
     const [isFinalPage, setIsFinalPage] = useState(false);
     const [currentTextIndex, setCurrentTextIndex] = useState(0);
+    const [responses, setResponses] = useState([]); 
 
     const handleNextText = () => {
+        setResponses(prevResponses => [
+            ...prevResponses,
+            {
+                user_id: userId,
+                text_id: texts[currentTextIndex].id,
+                interest: intValue,
+                difficult: diffValue,
+            }
+        ]);
+    
         if (currentTextIndex < texts.length - 1) {
             setCurrentTextIndex(currentTextIndex + 1);
             setDiffValue(4);
             setIntValue(4);
         } else {
-            setIsFinalPage(true);
+            sendResponses(); 
+            setIsFinalPage(true); 
         }
     };
 
+    const sendResponses = async () => {
+        const promises = responses.map(async (userResponse) => {
+            console.log('Отправка данных:', userResponse);
+            const response = await fetch('https://irt-test.ru/answers/', {
+                method: 'POST',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userResponse),
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Ошибка отправки данных: ${errorData.message}`);
+            }
+        });
+    
+        try {
+            await Promise.all(promises);
+            console.log('Все ответы успешно отправлены');
+        } catch (error) {
+            console.error('Ошибка отправки данных:', error);
+        }
+    };
+    
     if (error) {
         return <Text color="status-critical">Ошибка загрузки текстов: {error.message}</Text>;
     }

@@ -43,6 +43,7 @@ function App() {
     const [dark, setDark] = useState(false);
     const [showStartPage, setShowStartPage] = useState(true);
     const [texts, setTexts] = useState([]);
+    const [userId, setUserId] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -61,6 +62,32 @@ function App() {
 
         fetchTexts();
     }, []);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await fetch('https://irt-test.ru/users',
+                    {
+                        method: 'POST',
+                        headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        }
+                    }
+                );
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                setUserId(data.user_id);
+            } catch (error) {
+                setError(error);
+            }
+        };
+
+        fetchUser();
+    }, []);
+
 
     const startTest = () => {
         setShowStartPage(!showStartPage);
@@ -95,7 +122,7 @@ function App() {
                         {showStartPage ? (
                             <Instruction startTest={startTest} />
                         ) : (
-                            <Test texts={texts} error={error} />
+                            <Test texts={texts} userId={userId} error={error} />
                         )}
                     </Grid>
                 </PageContent>
