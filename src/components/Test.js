@@ -28,8 +28,8 @@ function Test({ texts, userId, error }) {
             {
                 user_id: userId,
                 text_id: texts[currentTextIndex].id,
-                interest: intValue,
-                difficult: diffValue,
+                interest: intValue - 1,
+                difficult: diffValue - 1,
             }
         ]);
     
