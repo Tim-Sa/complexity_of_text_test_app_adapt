@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   frontend:
+    restart: unless-stopped
     build: .
     container_name: react-app
     ports:
